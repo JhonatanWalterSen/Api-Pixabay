@@ -30,20 +30,28 @@ function mostrarAlerta(mensaje) {
             alerta.remove()
         }, 3000);
     }
-    
 }
 
-function buscarImagenes() {
+async function buscarImagenes() {
 
     const termino = d.querySelector('#termino').value
     const keyApi = '29980209-952b65cb29df0be1d534f22c6'
     const url = `https://pixabay.com/api/?key=${keyApi}&q=${termino}&per_page=${registrosPorPagina}&page=${paginaActual}`
-    fetch(url)
+    /* fetch(url)
         .then(respuesta => respuesta.json())
         .then(resultado => {
             totalPaginas = calcularPagina(resultado.totalHits)
             mostrarImagenes(resultado.hits)
-        })
+        }) */
+
+        try {
+            const respuesta = await fetch(url)
+            const resultado = await respuesta.json()
+            totalPaginas = calcularPagina(resultado.totalHits)
+            mostrarImagenes(resultado.hits)
+        } catch (error) {
+            console.log(error);
+        }
 }
 function calcularPagina(total) {
     return parseInt(Math.ceil(total /registrosPorPagina))
